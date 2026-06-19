@@ -1,0 +1,65 @@
+{
+  "name": "cursor-echo",
+  "displayName": "Cursor Echo",
+  "description": "Analyzes your Cursor chat sessions, spots recurring friction patterns, and tells you which Cursor features to use to fix them.",
+  "version": "0.1.0",
+  "publisher": "cursor-echo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cursor-echo/cursor-echo"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "commands": [
+      {
+        "command": "cursorEcho.analyzeSessions",
+        "title": "Cursor Echo: Analyze My Sessions"
+      },
+      {
+        "command": "cursorEcho.analyzeFixtures",
+        "title": "Cursor Echo: Analyze with Fixtures"
+      }
+    ],
+    "configuration": {
+      "title": "Cursor Echo",
+      "properties": {
+        "cursorEcho.transcriptsPath": {
+          "type": "string",
+          "default": "",
+          "description": "Custom path to a directory of .jsonl transcript files. Auto-discovers ~/.cursor/projects/ if empty."
+        },
+        "cursorEcho.minTurns": {
+          "type": "number",
+          "default": 3,
+          "minimum": 1,
+          "description": "Skip sessions shorter than this many turns."
+        },
+        "cursorEcho.saveReport": {
+          "type": "boolean",
+          "default": true,
+          "description": "Write .cursor/echo-report.md to the workspace after each run."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --target=es2022",
+    "watch": "npm run build -- --watch",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.21",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.9.2",
+    "esbuild": "^0.21.0",
+    "typescript": "^5.6.0"
+  }
+}

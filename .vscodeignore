@@ -1,0 +1,8 @@
+src/
+node_modules/
+Planning/
+.gitignore
+tsconfig.json
+*.ts
+.DS_Store
+cursor-echo-prd-v2.md
