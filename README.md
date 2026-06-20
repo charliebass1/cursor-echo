@@ -2,17 +2,37 @@
 
 A Cursor extension that reads your session history, spots recurring friction patterns, and tells you which Cursor features to use to fix them.
 
-## Install
+## Install from source
 
-1. Download `cursor-echo-0.1.0.vsix` from the [Releases page](https://github.com/your-repo/cursor-echo/releases)
-2. In Cursor: Extensions sidebar → `···` menu → **Install from VSIX...**
-3. Select the downloaded file
+1. Clone this repo:
+
+   ```bash
+   git clone https://github.com/charliebass1/cursor-echo.git
+   cd cursor-echo
+   ```
+
+2. Install dependencies and build:
+
+   ```bash
+   npm install
+   npm run build
+   ```
+
+3. Package and install the extension:
+
+   ```bash
+   npx @vscode/vsce package --no-dependencies --allow-missing-repository
+   ```
+
+   Then in Cursor: Command Palette (`Cmd+Shift+P`) → **Extensions: Install from VSIX...** → select `cursor-echo-0.1.0.vsix`.
+
+   Reload Cursor when prompted.
 
 ## Usage
 
 Open the Command Palette (`Cmd+Shift+P`) and run one of:
 
-- **Cursor Echo: Analyze My Sessions** — auto-discovers your real Cursor transcripts and generates a report
+- **Cursor Echo: Analyze My Sessions** — analyzes transcripts for the open workspace
 - **Cursor Echo: Analyze with Fixtures** — runs against bundled example data (no real sessions needed)
 
 The report opens as a Markdown Preview tab and is saved to `.cursor/echo-report.md` in your workspace.
@@ -32,7 +52,7 @@ Every finding quotes a specific line from your sessions so you can judge for you
 
 | Setting | Default | Description |
 |---|---|---|
-| `cursorEcho.transcriptsPath` | `""` | Custom path to `.jsonl` transcripts. Auto-discovers if empty. |
+| `cursorEcho.transcriptsPath` | `""` | Custom path to `.jsonl` transcripts. Auto-discovers workspace sessions if empty. |
 | `cursorEcho.minTurns` | `3` | Skip sessions shorter than this. |
 | `cursorEcho.saveReport` | `true` | Save `.cursor/echo-report.md` after each run. |
 
@@ -43,13 +63,12 @@ See [EXAMPLE_REPORT.md](EXAMPLE_REPORT.md) for sample output from the bundled fi
 ## Development
 
 ```bash
-git clone https://github.com/your-repo/cursor-echo.git
-cd cursor-echo
 npm install
 npm run build
+npm run watch   # rebuild on save
 ```
 
-To test locally, press `F5` in Cursor/VS Code to launch the Extension Development Host.
+To test without packaging, open this folder in Cursor and press **F5** to launch the Extension Development Host.
 
 ## License
 

@@ -1,5 +1,16 @@
+# Dependencies and build output
 node_modules/
 dist/
-.DS_Store
-*.vsix
+
+# Generated / local artifacts
 .cursor/
+*.vsix
+*.log
+
+# Environment and secrets
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
