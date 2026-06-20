@@ -1,4 +1,5 @@
 # Product Requirements Document: Cursor Echo
+
 **Version:** 0.4 — transcript path and schema confirmed
 
 ---
@@ -77,11 +78,13 @@ That's the entire interaction. The report opens inline, reads in under a minute,
 
 Three patterns, in plain language. Each maps to a Cursor feature that fixes it.
 
-| What you'll see | What it means | The fix |
-|---|---|---|
-| **Re-explaining context** | You restated something the agent forgot — a constraint, a file boundary, a decision already made | Save it as a [Rule](https://docs.cursor.com/context/rules) |
-| **Agent went out of scope** | The agent did noticeably more or less than you intended | Use [Plan mode](https://docs.cursor.com/agent/plan-mode) to review before it runs |
-| **Back-and-forth on intent** | The agent asked what you meant instead of attempting the task | Front-load specifics; consider an [Ask mode](https://docs.cursor.com/agent/ask-mode) prompt pattern |
+
+| What you'll see              | What it means                                                                                    | The fix                                                                                             |
+| ---------------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| **Re-explaining context**    | You restated something the agent forgot — a constraint, a file boundary, a decision already made | Save it as a [Rule](https://docs.cursor.com/context/rules)                                          |
+| **Agent went out of scope**  | The agent did noticeably more or less than you intended                                          | Use [Plan mode](https://docs.cursor.com/agent/plan-mode) to review before it runs                   |
+| **Back-and-forth on intent** | The agent asked what you meant instead of attempting the task                                    | Front-load specifics; consider an [Ask mode](https://docs.cursor.com/agent/ask-mode) prompt pattern |
+
 
 A fourth signal — **strong prompts** — surfaces exchanges where things went smoothly. These are flagged as candidates to save as reusable [Skills](https://docs.cursor.com/agent/skills).
 
@@ -101,6 +104,7 @@ Verified on macOS. The actual path structure is:
 ```
 
 Key details for `discover.ts`:
+
 - The main session file has the **same name as its parent UUID folder** — glob pattern is `~/.cursor/projects/*/agent-transcripts/*/*.jsonl`
 - Any file inside a `subagents/` directory must be **skipped** — those are not primary sessions
 - Project folders use path-encoded names (e.g., `Users-charlie-Building-Echo`) as well as numeric IDs — discover all of them
@@ -118,12 +122,14 @@ Each line in a session file is one of:
 ```
 
 Parsing rules for `parse.ts`:
+
 1. **User turns**: extract text from `message.content[].type === "text"`, then strip `<timestamp>` tags and extract the content inside `<user_query>...</user_query>`. If no `<user_query>` wrapper is present, use the raw text.
 2. **Assistant turns**: extract only `type === "text"` blocks. Skip all `type === "tool_use"` blocks — those are execution, not conversation.
 3. **Skip the line entirely** if it produces no text content after extraction (tool-only turns).
 4. Consecutive assistant-role lines are valid — the agent sometimes sends multiple messages in a row.
 
 ### Auto-discovery (default)
+
 Cursor Echo scans `~/.cursor/projects/*/agent-transcripts/*/*.jsonl` automatically when the command runs, excluding any files under `subagents/`. Nothing to configure.
 
 If no sessions are found, a notification explains why:
@@ -131,6 +137,7 @@ If no sessions are found, a notification explains why:
 > **Cursor Echo:** No sessions found at `~/.cursor/projects/`. Try pointing to a folder with `.jsonl` transcripts via Settings.
 
 ### Custom path (optional setting)
+
 In Cursor settings (`cursorEcho.transcriptsPath`), users can point to any directory. Cursor Echo will recursively find all `.jsonl` files within it, excluding any inside `subagents/` folders. Useful for analyzing a specific project or testing with the bundled fixtures.
 
 ---
@@ -138,9 +145,11 @@ In Cursor settings (`cursorEcho.transcriptsPath`), users can point to any direct
 ## 6. Output
 
 ### Report tab (primary)
+
 Opens as a rendered **Markdown Preview** tab (`vscode.commands.executeCommand('markdown.showPreview', uri)`) so the report displays as formatted text, not raw markdown. Designed to be readable in under a minute. Shows at most 3 patterns and 2 strong-prompt examples. If fewer patterns are detected, only those are shown — no padding.
 
 ### `.cursor/echo-report.md` (also written)
+
 The same content, saved to the current workspace's `.cursor/` directory alongside Rules and plans. Persists after the tab is closed. Can be disabled via `cursorEcho.saveReport: false` in settings.
 
 ---
@@ -166,18 +175,22 @@ Every detected pattern quotes the specific phrase that triggered it, so users ca
 
 **Commands** (registered in Command Palette):
 
-| Command | What it does |
-|---|---|
-| `Cursor Echo: Analyze My Sessions` | Runs analysis, opens report tab |
+
+| Command                              | What it does                                                |
+| ------------------------------------ | ----------------------------------------------------------- |
+| `Cursor Echo: Analyze My Sessions`   | Runs analysis, opens report tab                             |
 | `Cursor Echo: Analyze with Fixtures` | Runs against bundled example data — no real sessions needed |
+
 
 **Settings** (in Cursor `settings.json`):
 
-| Setting | Default | Description |
-|---|---|---|
-| `cursorEcho.transcriptsPath` | `""` | Custom path to `.jsonl` transcript directory. Auto-discovers if empty. |
-| `cursorEcho.minTurns` | `3` | Skip sessions shorter than this. Filters out one-turn experiments. |
-| `cursorEcho.saveReport` | `true` | Write `.cursor/echo-report.md` after each run. |
+
+| Setting                      | Default | Description                                                            |
+| ---------------------------- | ------- | ---------------------------------------------------------------------- |
+| `cursorEcho.transcriptsPath` | `""`    | Custom path to `.jsonl` transcript directory. Auto-discovers if empty. |
+| `cursorEcho.minTurns`        | `3`     | Skip sessions shorter than this. Filters out one-turn experiments.     |
+| `cursorEcho.saveReport`      | `true`  | Write `.cursor/echo-report.md` after each run.                         |
+
 
 ---
 
@@ -206,11 +219,13 @@ cursor-echo/
 ## 10. Install
 
 **For open-source / early users:**
+
 1. Download `cursor-echo-x.x.x.vsix` from the GitHub releases page
 2. In Cursor: Extensions sidebar → `···` menu → **Install from VSIX...**
 3. Select the downloaded file
 
 **If published to the Cursor/VS Code marketplace:**
+
 1. Open Extensions in Cursor (`Cmd+Shift+X`)
 2. Search `Cursor Echo`
 3. Click Install
@@ -238,3 +253,4 @@ v0.1 ships when:
 4. `Cursor Echo: Analyze with Fixtures` runs clean and produces output matching `EXAMPLE_REPORT.md`
 5. Installing from `.vsix` and running the command works on a fresh Cursor install with no additional setup
 6. A Cursor user who has never heard of this tool can understand the report without reading the README
+

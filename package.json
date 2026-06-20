@@ -16,16 +16,21 @@
     "Other"
   ],
   "main": "./dist/extension.js",
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:cursorEcho.analyzeSessions",
+    "onCommand:cursorEcho.analyzeFixtures"
+  ],
   "contributes": {
     "commands": [
       {
         "command": "cursorEcho.analyzeSessions",
-        "title": "Cursor Echo: Analyze My Sessions"
+        "title": "Analyze My Sessions",
+        "category": "Cursor Echo"
       },
       {
         "command": "cursorEcho.analyzeFixtures",
-        "title": "Cursor Echo: Analyze with Fixtures"
+        "title": "Analyze with Fixtures",
+        "category": "Cursor Echo"
       }
     ],
     "configuration": {

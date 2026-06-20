@@ -7,11 +7,14 @@ import type { SuggestionResult } from "./suggest";
 export function renderReport(
   result: SuggestionResult,
   sessionCount: number,
-  turnCount: number
+  turnCount: number,
+  sourceLabel: string
 ): string {
   const lines: string[] = [];
 
   lines.push(`# Cursor Echo  ·  ${sessionCount} sessions  ·  ${turnCount} turns`);
+  lines.push("");
+  lines.push(`_${sourceLabel}_`);
   lines.push("");
   lines.push("---");
 
@@ -50,9 +53,15 @@ export function renderReport(
     lines.push("---");
   }
 
-  if (result.patterns.length === 0 && result.strongPrompts.length === 0) {
+  if (result.patterns.length === 0) {
     lines.push("");
-    lines.push("No friction patterns detected in these sessions. Nice work.");
+    lines.push("## No recurring friction patterns detected in this batch");
+    lines.push("");
+    lines.push(
+      result.strongPrompts.length > 0
+        ? "This run found strong prompts but no repeated friction signals yet. Run again after more sessions (or broaden the transcript path) to surface trend-level issues."
+        : "No friction patterns or strong prompts were detected in these sessions."
+    );
     lines.push("");
     lines.push("---");
   }

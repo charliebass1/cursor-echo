@@ -17,7 +17,7 @@ const RE_EXPLAINING_RE =
   /i already (said|told you|mentioned)|as i mentioned|remember,?\s|like i said|we agreed|i already said|we discussed|as i (stated|noted)/i;
 
 const SCOPE_MISMATCH_RE =
-  /too much|only wanted|just the|don't touch|didn't ask you to|out of scope|more than i|way more than|that's not what i|i only (wanted|asked|need)/i;
+  /too much|only wanted|don't touch|didn't ask you to|out of scope|more than i asked|way more than|that's not what i|that's way more|i only wanted|no,? i only/i;
 
 const CLARIFICATION_RE =
   /what do you mean|which (file|approach|one|database|format)|can you clarify|do you want me to|could you specify|are you asking|a few questions|one more thing|should (it|this|the|i)|need to know/i;
