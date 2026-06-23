@@ -4,6 +4,27 @@ Date: 2026-06-22
 
 This is the Stage 4 Output A deliverable for the public-data landscape scan. It includes the Stage 0 coverage statement, exact Stage 1 queries, saturation/access status, grounding notes, and the full retained tagged item log. It intentionally stops before Stage 2 clustering, reliability checking, or memo synthesis.
 
+## Verification Pass (Wrap-Up, 2026-06-23)
+
+Before finalizing the deliverable, the load-bearing rows were re-checked against live sources. The findings below were applied to this log and propagated to Outputs B and C.
+
+Dropped as unverifiable (per the brief's hard constraint "if a source can't be re-found or verified, drop it"):
+
+- `cursor/cursor` issue #3853, #3565, #3706, #3730 — all return HTTP 404 on both `github.com/cursor/cursor` and the real Cursor tracker `github.com/getcursor/cursor`, whose issue numbers do not reach this range. These were "search-only / fetch unavailable" rows in the original pass; the issue numbers appear spurious. All four are removed from the retained GitHub log.
+
+Re-citation note (verifiable, but not promoted into the retained long-horizon set):
+
+- The underlying problem behind dropped #3853 — the agent shell tool failing to spawn a process on WSL (`pid: -1`) — is independently reported on the Cursor forum at [Agent Shell tool fails to spawn shell process on WSL (pid: -1)](https://forum.cursor.com/t/agent-shell-tool-fails-to-spawn-shell-process-on-wsl-pid-1/145286). It is general agent-mode execution, not specifically long-horizon, so it is noted as corroboration for the execution-reliability theme rather than added as a coded row.
+
+Re-verified (existence, title, date, and snippet confirmed via search after direct fetch returned 403 rate-limiting at wrap-up):
+
+- [Cannot start cloud agent](https://forum.cursor.com/t/cannot-start-cloud-agent/163194) — confirmed; search surfaced richer detail (stuck in `CREATING`, `EXEC_DAEMON_NOT_READY`, "Cannot resolve authority").
+- [Cursor 3: Worktrees & Best-of-N](https://forum.cursor.com/t/cursor-3-worktrees-best-of-n/156507) — confirmed; an additional independent thread corroborates the worktree/parallel regression: [/best-of-n does not run parallel model worktrees — falls back to single agent](https://forum.cursor.com/t/best-of-n-does-not-run-parallel-model-worktrees-falls-back-to-single-agent/156550).
+- [Agent finish steals focus](https://forum.cursor.com/t/agent-finish-steals-focus/157090) — confirmed; an additional independent thread corroborates the focus-steal friction: [Parallel agents/plans steal focus when completing](https://forum.cursor.com/t/parallel-agents-plans-steal-focus-when-completing-disrupts-workflow-when-reviewing-multiple-plans/150407).
+- [specstoryai/getspecstory issue #196](https://github.com/specstoryai/getspecstory/issues/196) — confirmed live; content matches the cited snippet (duplicate session files, truncated final messages).
+
+Net effect on the retained set: 30 coded non-grounding rows become 26 (12 Forum, 6 GitHub, 8 YouTube). Only theme T2 (context/instruction retention) loses evidence — its severity drops from S1–S2 to S1 and its independent source families drop from 3 to 2. T1, T3, T4, T5, and T6 are unaffected, and T3/T4 gain corroboration. The corroborating threads above are recorded as supporting context, not re-coded into the formal log, to avoid overclaiming from search snippets.
+
 ## Coverage Statement
 
 Live web search and page fetching are available in this environment. `forum.cursor.com` is directly reachable and is the strongest source for Cursor-specific bug reports, feature requests, and workflow discussions. Reddit is degraded: both `reddit.com` and `old.reddit.com` direct fetches were blocked by network policy/login requirements, so Reddit can only be used where an individual item is visible through search snippets or another reachable page; this leaves a meaningful blind spot for comment-thread agreement, disagreement, and workaround detail. X/Twitter is degraded: a Cursor profile page was partially fetchable, but X search/thread mining was unreliable and the bounded retry returned no direct X post URLs; use X only if individual posts can be re-opened or verified through reachable mirrors/screenshots. GitHub repository, issue, PR, and file pages are reachable when directly discoverable, but broad GitHub code search is degraded because web code search requires sign-in and `gh` is unavailable here; GitHub coverage is therefore opportunistic rather than exhaustive. YouTube video pages, metadata, descriptions, and transcripts are reachable for many videos and can be used as secondary workflow evidence, but YouTube comments are not reliably accessible through `WebFetch`; comment sentiment is therefore unavailable unless an individual comment is visible on a reachable page or user-provided export.
@@ -127,7 +148,7 @@ Pass C - success/disconfirming:
 
 Cursor Forum: Ran all 9 bounded queries and fetched 12 directly reachable forum threads. Stopped at the item cap rather than thematic saturation. Repeated infrastructure, context, worktree, orchestration, and review-friction themes appeared; Pass C still added success and review-friction signals, so the source is not fully saturated.
 
-GitHub: Ran all 9 bounded queries and retained 10 substantive items. Stopped at the item cap, not full saturation. Broad code search was not used because GitHub code search is gated and `gh` is unavailable. Some `cursor/cursor` issue rows are search-only because direct fetch/API access failed; treat those as weaker than directly fetched GitHub files/issues.
+GitHub: Ran all 9 bounded queries and originally retained 10 substantive items, reduced to 6 after the wrap-up verification pass dropped 4 unverifiable `cursor/cursor` issue rows (see Verification Pass above). Stopped at the item cap, not full saturation. Broad code search was not used because GitHub code search is gated and `gh` is unavailable. The dropped rows were exactly the search-only ones whose direct fetch/API access had failed; the remaining 6 are directly verifiable repository files, repos, and one confirmed issue.
 
 Reddit: Direct access was blocked by network policy/login requirements. No retained Reddit rows. This is a coverage gap, not evidence of absence.
 
@@ -166,11 +187,7 @@ Agent Finish Steals Focus | https://forum.cursor.com/t/agent-finish-steals-focus
 bybren-llc/safe-agentic-workflow | https://github.com/bybren-llc/safe-agentic-workflow/blob/edf298b9/.cursor/rules/30-background-agents.mdc | n.d. | Cloud Agents era | Cursor | A | background-agent workflow | PR-producing background agents with rules, validation, HITL review | S? not failure | Cursor-actionable | "clone GitHub, branch, commit, push, open pull requests"
 Wade-O-Lution-Inc/cursor-setup-guide | https://github.com/Wade-O-Lution-Inc/cursor-setup-guide/blob/main/agents.md | n.d. | Cloud Agents era | Cursor | A | cloud setup | AGENTS.md bridges ephemeral VM/local-env gap | S1 rework risk | Cursor-actionable | "ephemeral VMs without local tools, secret managers, or network"
 HKTITAN/cursor-best-practices | https://github.com/HKTITAN/cursor-best-practices/blob/HEAD/cursor-best-practices/references/rules-and-commands.md | n.d. | Rules/Commands era | Cursor | A | repo workflow design | Rules, commands, AGENTS.md used as persistent/triggered workflow system | S? not failure | Cursor-actionable | "Apply project rules from .cursor/rules or AGENTS.md"
-cursor/cursor issue #3853 | https://github.com/cursor/cursor/issues/3853 | n.d.; fetch unavailable | unknown | Cursor | B | tool execution | Agent Terminal cannot spawn shell on WSL2 | S2 blocking | Cursor-actionable | "commands never execute; pid is always -1"
 specstoryai/getspecstory issue #196 | https://github.com/specstoryai/getspecstory/issues/196 | 2026-03-20 | Mar 2026 latest | likely-Cursor | B | history/audit capture | Duplicate/truncated Cursor session histories weaken audit trail | S1 rework/babysit | ecosystem-level | "last agent responses often cut off mid-sentence"
-cursor/cursor issue #3565 | https://github.com/cursor/cursor/issues/3565 | n.d.; fetch unavailable | unknown | Cursor | B | instruction following | Explicit rules acknowledged then violated | S2 blocking | Cursor-actionable | "acknowledges explicit user rules but then immediately violates them"
-cursor/cursor issue #3706 | https://github.com/cursor/cursor/issues/3706 | n.d.; fetch unavailable | recent/latest per snippet | Cursor | B | rules injection | User Rules not passed into AI context | S2 blocking | Cursor-actionable | "AI cannot see User Rules"
-cursor/cursor issue #3730 | https://github.com/cursor/cursor/issues/3730 | 2025-10-30 per result | Oct 2025 | Cursor | B | mode/tooling | Agent mode reverts to Ask, no code execution | S2 blocking | Cursor-actionable | "agent does not execute any code"
 bryantbrock/cursor-background-agents-mcp | https://github.com/bryantbrock/cursor-background-agents-mcp | n.d. | Cloud Agents API era | Cursor | C | issue-to-PR orchestration | MCP workflow launches agents, links PRs, tracks completion/error | S? success pattern | Cursor/ecosystem-actionable | "Agent implements solution; creates PR with Closes #42"
 KhalidAbdelaty/cursor-sdk-bug-fixer-demo | https://github.com/KhalidAbdelaty/cursor-sdk-bug-fixer-demo | n.d. | Cloud Agents SDK era | Cursor | C | successful cloud run | Demo cloud agent fixes bug and prints PR URL | S? success; S1 empty-diff risk | Cursor-actionable | "status FINISHED; Pull request: github.com/.../pull/1"
 ```
@@ -232,7 +249,7 @@ Cursor Blog: Auto-review | https://cursor.com/blog/agent-autonomy-auto-review | 
 
 - Forum evidence is auditable and Cursor-specific, but overrepresents failures, heavy users, and public support cases.
 - GitHub evidence shows real workflows and public artifacts, but the sample overrepresents tool builders, demo repos, and documented enthusiasts; private enterprise use is absent.
-- Search-only GitHub issue rows are weaker than directly fetched files/issues and should be validated before being used in the final memo.
+- Search-only GitHub issue rows were validated at wrap-up: four `cursor/cursor` issue rows could not be re-found (404 on both `cursor/cursor` and `getcursor/cursor`) and were dropped. All remaining GitHub rows are directly verifiable repository files, repos, or a confirmed issue.
 - Reddit and X produced no retained rows under the access constraints, so the scan lacks public social-commentary texture and disagreement from those platforms.
 - YouTube evidence is useful for concrete workflow demonstrations and disconfirming/success cases, but it overrepresents creators, launch coverage, tutorials, sponsorship-adjacent content, and demo projects; comments were not available for triangulating audience disagreement.
 - Public engagement should not be treated as prevalence. It can only indicate that a claim resonated within that platform's visible audience.

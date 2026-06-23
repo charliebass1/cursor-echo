@@ -37,9 +37,7 @@ Adapted plan:
 
 ## Evidence Log
 
-| Date | Source | Type | Notes | Follow-Up |
-|---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+This file holds the Stage 0 coverage check (above). The full tagged source log — every retained item with URL, date, Cursor signal, workflow stage, candidate theme, severity, actionability, and evidence snippet — lives in [`output-a-coverage-source-log.md`](output-a-coverage-source-log.md), along with the 2026-06-23 verification pass that dropped four unverifiable rows.
 
 ## Source Quality Notes
 

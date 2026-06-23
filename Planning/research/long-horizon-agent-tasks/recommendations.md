@@ -93,7 +93,7 @@ These are product hypotheses from the public-data scan, not feature specs to shi
 | Now | Cloud Agent readiness diagnosis and recovery | T1 | Strong | High | Draft hypothesis |
 | Now | Parallel-agent state and ownership visibility | T3 | Strong | High | Draft hypothesis |
 | Now | Completed-agent handoff contract | T4 | Strong | High | Draft hypothesis |
-| Investigate | Rule/context visibility and refresh semantics | T2 | Strong | Mixed-high | Needs internal traces |
+| Investigate | Rule/context visibility and refresh semantics | T2 | Medium-strong (S1) | Mixed-high | Needs internal traces |
 | Investigate | Pre-launch task decomposition | T5 | Medium | High | Needs workflow validation |
 | Watch | Spend, permission, and security cues | T6 | Thin-medium | Medium | Needs adoption/risk signals |
 | Park | Generic model recency bias outside Cursor context surfaces | T2 subset | Strong but generic | Low | Not a Cursor-only problem |

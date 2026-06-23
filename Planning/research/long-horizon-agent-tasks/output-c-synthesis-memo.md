@@ -29,11 +29,11 @@ Researcher inference: The working mental model is shifting from "chat with an as
 | Cloud startup and environment reliability | Startup/environment | Strong | S2 evidenced | High | 2 | Mostly current |
 | Parallel agent and worktree orchestration | Planning/execution/merge | Strong | S1-S2 evidenced | High | 3 | Current |
 | Review, verification, and handoff friction | Completion/review | Strong | S1 evidenced; success-linked | High | 3 | Current/mixed |
-| Context and instruction retention | Mid-run context | Strong | S1-S2 evidenced | Mixed-high | 3 | Current/mixed |
+| Context and instruction retention | Mid-run context | Medium-strong | S1 evidenced | Mixed-high | 2 | Current/mixed |
 | Task sizing and delegation discipline | Planning/setup | Medium | S1 risk; success-linked | High | 3 | Current/mixed |
 | Cost, permissions, and security governance | Setup/governance | Thin-medium | S1 risk | Medium | 1 plus docs | Current/mixed |
 
-Observed in data: Cloud startup/environment reliability includes blocked startup, exec-daemon failures, and terminal/mode execution failures ([Cannot Start Cloud Agent](https://forum.cursor.com/t/cannot-start-cloud-agent/163194), [Background Agent Fails Repeatedly](https://forum.cursor.com/t/background-agent-fails-repeatedly-with-we-encountered-an-unexpected-error-repeatedly-no-request-id-visible/159566)).
+Observed in data: Cloud startup/environment reliability includes blocked startup, exec-daemon readiness failures, and "cannot resolve authority" errors ([Cannot Start Cloud Agent](https://forum.cursor.com/t/cannot-start-cloud-agent/163194), [Background Agent Fails Repeatedly](https://forum.cursor.com/t/background-agent-fails-repeatedly-with-we-encountered-an-unexpected-error-repeatedly-no-request-id-visible/159566)). A related general agent-mode execution failure (shell tool cannot spawn, `pid: -1`) is independently reported ([Agent shell fails to spawn on WSL](https://forum.cursor.com/t/agent-shell-tool-fails-to-spawn-shell-process-on-wsl-pid-1/145286)).
 
 Observed in data: Parallel-agent/worktree orchestration includes stuck subagents, worktree regressions, wrong-directory edits, and external orchestration workarounds ([Long-Running Multi-Agent Orchestration](https://forum.cursor.com/t/workflow-long-running-multi-agent-orchestration-root-agent-parallel-sub-agents-separate-prs/160563), [Cursor 2.0: Shipping Real Feature](https://www.youtube.com/watch?v=79FG_IocSPo)).
 
@@ -101,8 +101,10 @@ The next internal research step should compare public hypotheses against product
 
 ## Appendix: Source Limits
 
+- Lead deliverable (read first): `DELIVERABLE.md`.
 - Full source log: `output-a-coverage-source-log.md`.
 - Theme and reliability artifact: `output-b-themes-reliability.md`.
 - Recommendation backlog: `recommendations.md`.
+- Verification pass (2026-06-23): four unverifiable `cursor/cursor` issue rows were dropped (404); only theme T2 lost evidence (severity S1–S2 → S1, source families 3 → 2). Details in `output-a-coverage-source-log.md`.
 - YouTube videos/transcripts were accessible; YouTube comments were not.
 - Reddit and X produced no retained item rows under access constraints.
