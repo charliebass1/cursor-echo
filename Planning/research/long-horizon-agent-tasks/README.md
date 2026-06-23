@@ -23,6 +23,7 @@ Map how developers actually run long-horizon or autonomous agent tasks today, es
 ## Files
 
 - `DELIVERABLE.md` — **the deliverable**: leads with the answer and the ranked recommendations.
+- `founder-brief.md` — one-page, founder-grade read: Compile 2026 announcements → this study → ideas to explore.
 - `output-c-synthesis-memo.md` — full synthesis memo (executive summary → limits).
 - `recommendations.md` — product-hypothesis backlog with MVPs, risks, and confidence.
 - `output-b-themes-reliability.md` — theme codebook, 2×2 placement, reliability check.
