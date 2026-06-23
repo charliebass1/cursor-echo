@@ -1,74 +1,99 @@
 # Cursor Echo
 
-A Cursor extension that reads your session history, spots recurring friction patterns, and tells you which Cursor features to use to fix them.
+Cursor Echo is a local Cursor extension that analyzes your recent agent chats and turns repeated friction into practical Cursor workflow fixes.
 
-## Install from source
+It is built for developers who notice things like:
 
-1. Clone this repo:
+- "I keep re-explaining the same project constraint."
+- "The agent keeps changing more files than I asked for."
+- "My prompts work sometimes, but I do not know which ones are worth reusing."
 
-   ```bash
-   git clone https://github.com/charliebass1/cursor-echo.git
-   cd cursor-echo
-   ```
+Echo reads local Cursor transcripts, opens a short Markdown report, and saves it to `.cursor/echo-report.md`.
 
-2. Install dependencies and build:
+## What It Does
 
-   ```bash
-   npm install
-   npm run build
-   ```
+Echo looks for four useful signals:
 
-3. Package and install the extension:
+- **Re-explained context**: suggests a copy-ready `.cursor/rules/` rule.
+- **Scope mismatch**: suggests a Plan mode scope prompt.
+- **Back-and-forth clarification**: suggests a stronger prompt template.
+- **Strong prompts**: turns prompts that worked well into draft Skill material.
 
-   ```bash
-   npx @vscode/vsce package --no-dependencies --allow-missing-repository
-   ```
+Each finding includes:
 
-   Then in Cursor: Command Palette (`Cmd+Shift+P`) → **Extensions: Install from VSIX...** → select `cursor-echo-0.1.0.vsix`.
+- One recommended next action.
+- A quote from your own session.
+- A plain-language explanation of why Echo flagged it.
+- A copy-ready Cursor artifact or prompt template.
 
-   Reload Cursor when prompted.
+No account, API key, or server is required. Analysis runs locally with simple heuristics.
 
-## Usage
+## Quick Start
 
-Open the Command Palette (`Cmd+Shift+P`) and run one of:
+```bash
+git clone https://github.com/charliebass1/cursor-echo.git
+cd cursor-echo
+npm install
+npm run build
+npx @vscode/vsce package --no-dependencies --allow-missing-repository
+```
 
-- **Cursor Echo: Analyze My Sessions** — analyzes transcripts for the open workspace
-- **Cursor Echo: Analyze with Fixtures** — runs against bundled example data (no real sessions needed)
+Then in Cursor:
 
-The report opens as a Markdown Preview tab and is saved to `.cursor/echo-report.md` in your workspace.
+1. Open the Command Palette with `Cmd+Shift+P`.
+2. Run `Extensions: Install from VSIX...`.
+3. Select `cursor-echo-0.1.0.vsix`.
+4. Reload Cursor when prompted.
 
-## What it finds
+## Use It
 
-| Pattern | What it means | Suggested fix |
-|---|---|---|
-| **Re-explaining context** | You restated something the agent forgot | Save it as a [Rule](https://docs.cursor.com/context/rules) |
-| **Agent went out of scope** | The agent did more or less than intended | Use [Plan mode](https://docs.cursor.com/agent/plan-mode) |
-| **Back-and-forth on intent** | The agent asked what you meant instead of acting | Front-load specifics; try [Ask mode](https://docs.cursor.com/agent/ask-mode) |
-| **Strong prompts** | Clean, specific exchanges that worked well | Worth saving as [Skills](https://docs.cursor.com/agent/skills) |
+Open the Command Palette and run:
 
-Every finding quotes a specific line from your sessions so you can judge for yourself.
+- `Cursor Echo: Analyze My Sessions`: analyzes real transcripts for the open workspace.
+- `Cursor Echo: Analyze with Fixtures`: runs the bundled demo transcripts.
+
+The report opens as a Markdown Preview tab and is saved to `.cursor/echo-report.md`.
+
+## Example Output
+
+The report starts with the most useful next move:
+
+```text
+## Start here
+
+Do this first: Create the suggested rule below, then rerun Echo after a few sessions to see if this pattern drops.
+```
+
+Then it shows the evidence and a copy-ready recommendation:
+
+```text
+Copy-ready Cursor Rule -> .cursor/rules/project-conventions.mdc
+
+---
+description: Project conventions inferred from repeated Cursor corrections
+alwaysApply: true
+---
+
+- Do not introduce third-party dependencies unless explicitly approved.
+```
+
+See [EXAMPLE_REPORT.md](EXAMPLE_REPORT.md) for the full fixture output.
 
 ## Settings
 
-| Setting | Default | Description |
-|---|---|---|
-| `cursorEcho.transcriptsPath` | `""` | Custom path to `.jsonl` transcripts. Auto-discovers workspace sessions if empty. |
-| `cursorEcho.minTurns` | `3` | Skip sessions shorter than this. |
-| `cursorEcho.saveReport` | `true` | Save `.cursor/echo-report.md` after each run. |
-
-## Example report
-
-See [EXAMPLE_REPORT.md](EXAMPLE_REPORT.md) for sample output from the bundled fixtures.
+- `cursorEcho.transcriptsPath`: custom directory of `.jsonl` transcripts. Defaults to auto-discovery under `~/.cursor/projects/`.
+- `cursorEcho.minTurns`: skips very short sessions. Default: `3`.
+- `cursorEcho.saveReport`: saves `.cursor/echo-report.md`. Default: `true`.
 
 ## Development
 
 ```bash
 npm install
 npm run build
-npm run watch   # rebuild on save
+npm run watch
 ```
 
-To test without packaging, open this folder in Cursor and press **F5** to launch the Extension Development Host.
+To test the extension without packaging, open this folder in Cursor and press `F5` to launch the Extension Development Host.
 
 ## License
 

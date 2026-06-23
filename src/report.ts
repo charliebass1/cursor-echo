@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import type { SuggestionResult } from "./suggest";
+import type { SuggestedArtifact, SuggestionResult } from "./suggest";
 
 export function renderReport(
   result: SuggestionResult,
@@ -18,6 +18,33 @@ export function renderReport(
   lines.push("");
   lines.push("---");
 
+  const firstPattern = result.patterns[0];
+  if (firstPattern) {
+    lines.push("");
+    lines.push("## Start here");
+    lines.push("");
+    lines.push(`Do this first: ${firstPattern.nextAction}`);
+    lines.push("");
+    lines.push(
+      `Why: this was the most common signal in this run, seen in ${firstPattern.sessionCount} of ${firstPattern.totalSessions} sessions.`
+    );
+    lines.push("");
+    lines.push("---");
+  } else if (result.strongPrompts.length > 0) {
+    lines.push("");
+    lines.push("## Start here");
+    lines.push("");
+    lines.push(
+      "Do this first: save one of the strong prompts below as a reusable Cursor Skill or prompt template."
+    );
+    lines.push("");
+    lines.push(
+      "Why: this run did not find repeated friction, so the highest-value move is preserving what already worked."
+    );
+    lines.push("");
+    lines.push("---");
+  }
+
   for (const s of result.patterns) {
     lines.push("");
     lines.push(`## ${s.heading}`);
@@ -25,14 +52,14 @@ export function renderReport(
     lines.push("");
     lines.push(s.fix);
     lines.push("");
+    lines.push(`Next action: ${s.nextAction}`);
+    lines.push("");
+    lines.push(`Why Echo flagged this: ${s.detectedBecause}`);
+    lines.push("");
     lines.push("From your sessions:");
     lines.push(`> "${s.quotedExample}"`);
-
-    if (s.suggestedRule) {
-      lines.push("");
-      lines.push(`Suggested rule → ${s.suggestedRule.path}`);
-      lines.push(`  ${s.suggestedRule.content}`);
-    }
+    lines.push("");
+    renderArtifact(lines, s.artifact);
 
     lines.push("");
     lines.push("---");
@@ -48,6 +75,9 @@ export function renderReport(
     lines.push("");
     for (const sp of result.strongPrompts) {
       lines.push(`· "${sp.text}"`);
+      lines.push("");
+      renderArtifact(lines, sp.artifact);
+      lines.push("");
     }
     lines.push("");
     lines.push("---");
@@ -70,6 +100,17 @@ export function renderReport(
   lines.push("*Report saved to .cursor/echo-report.md*");
 
   return lines.join("\n");
+}
+
+function renderArtifact(lines: string[], artifact: SuggestedArtifact): void {
+  const fence = artifact.content.includes("```") ? "````text" : "```text";
+  const closingFence = artifact.content.includes("```") ? "````" : "```";
+
+  lines.push(`${artifact.label}${artifact.path ? ` → ${artifact.path}` : ""}`);
+  lines.push("");
+  lines.push(fence);
+  lines.push(artifact.content);
+  lines.push(closingFence);
 }
 
 export async function showReport(
