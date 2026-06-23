@@ -4,19 +4,38 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import type { SuggestedArtifact, SuggestionResult } from "./suggest";
 
+export interface RenderOptions {
+  aiInsights?: string;
+  aiProviderLabel?: string;
+}
+
 export function renderReport(
   result: SuggestionResult,
   sessionCount: number,
   turnCount: number,
-  sourceLabel: string
+  sourceLabel: string,
+  options: RenderOptions = {}
 ): string {
   const lines: string[] = [];
 
   lines.push(`# Cursor Echo  ·  ${sessionCount} sessions  ·  ${turnCount} turns`);
   lines.push("");
   lines.push(`_${sourceLabel}_`);
+  if (options.aiProviderLabel) {
+    lines.push("");
+    lines.push(`_Echo Pro analysis via ${options.aiProviderLabel}._`);
+  }
   lines.push("");
   lines.push("---");
+
+  if (options.aiInsights && options.aiInsights.trim().length > 0) {
+    lines.push("");
+    lines.push("## Echo Pro insights");
+    lines.push("");
+    lines.push(options.aiInsights.trim());
+    lines.push("");
+    lines.push("---");
+  }
 
   const firstPattern = result.patterns[0];
   if (firstPattern) {
@@ -54,7 +73,7 @@ export function renderReport(
     lines.push("");
     lines.push(`Next action: ${s.nextAction}`);
     lines.push("");
-    lines.push(`Why Echo flagged this: ${s.detectedBecause}`);
+    lines.push(`Why this recommendation: ${s.detectedBecause}`);
     lines.push("");
     lines.push("From your sessions:");
     lines.push(`> "${s.quotedExample}"`);

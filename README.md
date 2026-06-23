@@ -30,12 +30,13 @@ No account, API key, or server is required. Analysis runs locally with simple he
 
 ## Quick Start
 
+The fastest way to understand Echo is to install it, run the fixture demo, and inspect the generated report.
+
 ```bash
 git clone https://github.com/charliebass1/cursor-echo.git
 cd cursor-echo
 npm install
-npm run build
-npx @vscode/vsce package --no-dependencies --allow-missing-repository
+npm run package
 ```
 
 Then in Cursor:
@@ -45,12 +46,24 @@ Then in Cursor:
 3. Select `cursor-echo-0.1.0.vsix`.
 4. Reload Cursor when prompted.
 
+## Try The Demo
+
+Open the Command Palette and run:
+
+```text
+Cursor Echo: Analyze with Fixtures
+```
+
+This uses bundled demo transcripts, so you can see the product without exposing or configuring real sessions. Echo opens a Markdown report that starts with one recommended next action, then shows evidence and copy-ready Cursor artifacts.
+
 ## Use It
 
 Open the Command Palette and run:
 
 - `Cursor Echo: Analyze My Sessions`: analyzes real transcripts for the open workspace.
 - `Cursor Echo: Analyze with Fixtures`: runs the bundled demo transcripts.
+- `Cursor Echo: Apply Top Rule Recommendation`: analyzes real transcripts and writes the top Rule recommendation into `.cursor/rules/`.
+- `Cursor Echo: Set API Key (Echo Pro)` / `Clear API Key (Echo Pro)`: manage the key used by the optional AI mode.
 
 The report opens as a Markdown Preview tab and is saved to `.cursor/echo-report.md`.
 
@@ -67,10 +80,10 @@ Do this first: Create the suggested rule below, then rerun Echo after a few sess
 Then it shows the evidence and a copy-ready recommendation:
 
 ```text
-Copy-ready Cursor Rule -> .cursor/rules/project-conventions.mdc
+Copy-ready Cursor Rule -> .cursor/rules/dependency-approval.mdc
 
 ---
-description: Project conventions inferred from repeated Cursor corrections
+description: Require approval before adding dependencies
 alwaysApply: true
 ---
 
@@ -79,17 +92,44 @@ alwaysApply: true
 
 See [EXAMPLE_REPORT.md](EXAMPLE_REPORT.md) for the full fixture output.
 
+## Echo Pro (bring your own key)
+
+By default Echo is fully local: it uses regex/heuristic analysis, sends nothing off your machine, and costs no tokens. Power users can optionally enable **Echo Pro**, which uses your own API key for higher-quality analysis:
+
+- **Smarter classification**: an LLM tags friction patterns instead of regex, reducing misses and false positives.
+- **Personalized artifacts**: Rules, Skills, and prompts are written from your actual session text, not fixed templates.
+- **Echo Pro insights**: an added report section with a trend read and short coaching note.
+
+Setup:
+
+1. Run `Cursor Echo: Set API Key (Echo Pro)` and paste your key. It is stored in VS Code SecretStorage, never in `settings.json`.
+2. Enable the `cursorEcho.aiMode` setting.
+3. Pick `cursorEcho.aiProvider` (`anthropic`, `openai`, or `cursor`).
+4. Run `Cursor Echo: Analyze My Sessions`. The first run asks for explicit consent before any text is sent.
+
+Notes:
+
+- AI mode sends transcript text to your chosen provider. Likely secrets are redacted first (`cursorEcho.redactBeforeSend`, on by default), and `cursorEcho.maxSessionsForAI` caps how many sessions are sent per run.
+- Any AI failure (no key, network error, invalid output) falls back to local heuristics, so a run always produces a report.
+- The `cursor` provider uses `@cursor/sdk`, an optional dependency that requires Node `>= 22.13` in the extension host. The `anthropic`/`openai` providers are plain HTTPS calls with no extra dependency and are the recommended starting point.
+
 ## Settings
 
 - `cursorEcho.transcriptsPath`: custom directory of `.jsonl` transcripts. Defaults to auto-discovery under `~/.cursor/projects/`.
 - `cursorEcho.minTurns`: skips very short sessions. Default: `3`.
 - `cursorEcho.saveReport`: saves `.cursor/echo-report.md`. Default: `true`.
+- `cursorEcho.aiMode`: opt in to Echo Pro AI analysis. Default: `false`.
+- `cursorEcho.aiProvider`: `anthropic` | `openai` | `cursor`. Default: `anthropic`.
+- `cursorEcho.aiModel`: model id for the provider. Default: per-provider sensible default.
+- `cursorEcho.maxSessionsForAI`: cap sessions sent to the provider per run. Default: `20`.
+- `cursorEcho.redactBeforeSend`: redact likely secrets before sending. Default: `true`.
 
 ## Development
 
 ```bash
 npm install
 npm run build
+npm run package
 npm run watch
 ```
 

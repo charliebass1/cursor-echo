@@ -17,16 +17,16 @@ The fix: save repeated context as a Cursor Rule so you never have to say it agai
 
 Next action: Create the suggested rule below, then rerun Echo after a few sessions to see if this pattern drops.
 
-Why Echo flagged this: Echo found language where you referenced an instruction or constraint you had already given.
+Why this recommendation: This looks like a Rule candidate because you referenced an instruction or constraint you had already given.
 
 From your sessions:
 > "I already told you — no third-party HTTP libraries. got is a third-party library. Please remove it and implement the retry logic with a..."
 
-Copy-ready Cursor Rule → .cursor/rules/project-conventions.mdc
+Copy-ready Cursor Rule → .cursor/rules/dependency-approval.mdc
 
 ```text
 ---
-description: Project conventions inferred from repeated Cursor corrections
+description: Require approval before adding dependencies
 alwaysApply: true
 ---
 
@@ -42,7 +42,7 @@ The fix: use Plan mode to review the approach before the agent runs. You approve
 
 Next action: Start broad or risky tasks in Plan mode and approve the scope before letting the agent edit files.
 
-Why Echo flagged this: Echo found correction language that usually means the agent changed more, less, or different code than intended.
+Why this recommendation: This looks like a Plan mode candidate because the correction suggests the agent changed more, less, or different code than intended.
 
 From your sessions:
 > "The mobile nav menu isn't closing when a user taps a link. Can you fix the click handler in /src/components/MobileNav.tsx? Just the..."
@@ -73,7 +73,7 @@ The fix: front-load specifics in your prompt — name the file, the approach, an
 
 Next action: Rewrite your next similar prompt with the file, desired outcome, and out-of-scope work in the first message.
 
-Why Echo flagged this: Echo found an assistant clarification question where the missing context could likely have been included up front.
+Why this recommendation: This looks like a prompt-template candidate because the missing context could likely have been included up front.
 
 From your sessions:
 > "I can help with that. A few questions first: 1. Which database are you using — Postgres, MySQL, or SQLite? 2. Do you want me to use a..."
@@ -104,15 +104,15 @@ These are clean, specific, and got good results. Worth saving as reusable Skills
 
 · "Add a loading spinner to the ParticipantList component in /src/components/ParticipantList.tsx while the Supabase query i..."
 
-Reusable Skill draft → .cursor/skills/reusable-workflow/SKILL.md
+Reusable Skill draft → .cursor/skills/component-loading-state/SKILL.md
 
 ````text
 ---
-name: reusable-workflow
-description: Use this skill when a task matches a prompt pattern that worked well before.
+name: component-loading-state
+description: Use this skill when adding a bounded loading state to a specific UI component.
 ---
 
-# Reusable Workflow
+# Component Loading State
 
 Start from this proven prompt shape:
 
@@ -125,15 +125,15 @@ Before editing, preserve the explicit scope, constraints, and file references fr
 
 · "I need to refactor the data pipeline in /src/pipeline. Important constraint: we cannot use any third-party HTTP librarie..."
 
-Reusable Skill draft → .cursor/skills/reusable-workflow/SKILL.md
+Reusable Skill draft → .cursor/skills/pipeline-refactor/SKILL.md
 
 ````text
 ---
-name: reusable-workflow
-description: Use this skill when a task matches a prompt pattern that worked well before.
+name: pipeline-refactor
+description: Use this skill when refactoring a named area while preserving explicit scope and constraints.
 ---
 
-# Reusable Workflow
+# Pipeline Refactor
 
 Start from this proven prompt shape:
 

@@ -16,10 +16,6 @@
     "Other"
   ],
   "main": "./dist/extension.js",
-  "activationEvents": [
-    "onCommand:cursorEcho.analyzeSessions",
-    "onCommand:cursorEcho.analyzeFixtures"
-  ],
   "contributes": {
     "commands": [
       {
@@ -30,6 +26,21 @@
       {
         "command": "cursorEcho.analyzeFixtures",
         "title": "Analyze with Fixtures",
+        "category": "Cursor Echo"
+      },
+      {
+        "command": "cursorEcho.applyTopRecommendation",
+        "title": "Apply Top Rule Recommendation",
+        "category": "Cursor Echo"
+      },
+      {
+        "command": "cursorEcho.setApiKey",
+        "title": "Set API Key (Echo Pro)",
+        "category": "Cursor Echo"
+      },
+      {
+        "command": "cursorEcho.clearApiKey",
+        "title": "Clear API Key (Echo Pro)",
         "category": "Cursor Echo"
       }
     ],
@@ -51,14 +62,53 @@
           "type": "boolean",
           "default": true,
           "description": "Write .cursor/echo-report.md to the workspace after each run."
+        },
+        "cursorEcho.aiMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Echo Pro: opt in to AI-powered analysis using your own API key. Sends transcript text to your chosen provider. Disabled by default; falls back to local heuristics if no key is set."
+        },
+        "cursorEcho.aiProvider": {
+          "type": "string",
+          "default": "anthropic",
+          "enum": [
+            "anthropic",
+            "openai",
+            "cursor"
+          ],
+          "enumDescriptions": [
+            "Anthropic Messages API (direct HTTPS, lightweight).",
+            "OpenAI Chat Completions API (direct HTTPS, lightweight).",
+            "Cursor SDK (@cursor/sdk). Requires Node >= 22.13 in the extension host and the optional dependency to be installed."
+          ],
+          "description": "Echo Pro: which backend to use when AI mode is enabled."
+        },
+        "cursorEcho.aiModel": {
+          "type": "string",
+          "default": "",
+          "description": "Echo Pro: model id for the selected provider. Leave empty to use a sensible per-provider default."
+        },
+        "cursorEcho.maxSessionsForAI": {
+          "type": "number",
+          "default": 20,
+          "minimum": 1,
+          "description": "Echo Pro: cap how many of the most recent sessions are sent to the AI provider per run, to bound cost and latency."
+        },
+        "cursorEcho.redactBeforeSend": {
+          "type": "boolean",
+          "default": true,
+          "description": "Echo Pro: redact likely secrets (tokens, keys, emails) from transcript text before sending it to the AI provider."
         }
       }
     }
   },
   "scripts": {
-    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --target=es2022",
+    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --external:@cursor/sdk --format=cjs --platform=node --target=es2022",
     "watch": "npm run build -- --watch",
-    "package": "vsce package"
+    "package": "npm run build && vsce package --no-dependencies --allow-missing-repository --allow-package-all-secrets --allow-package-env-file"
+  },
+  "optionalDependencies": {
+    "@cursor/sdk": "^1.0.19"
   },
   "devDependencies": {
     "@types/node": "^22.19.21",
