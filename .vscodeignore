@@ -1,6 +1,6 @@
 src/
 node_modules/
-Planning/
+docs/
 .gitignore
 tsconfig.json
 *.ts

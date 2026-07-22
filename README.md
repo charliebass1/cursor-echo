@@ -124,6 +124,17 @@ Notes:
 - `cursorEcho.maxSessionsForAI`: cap sessions sent to the provider per run. Default: `20`.
 - `cursorEcho.redactBeforeSend`: redact likely secrets before sending. Default: `true`.
 
+## Project Docs
+
+For active development and product behavior, use these root docs:
+
+- `README.md` (setup, usage, and extension commands)
+- `cursor-echo-prd-v2.md` (product requirements baseline)
+- `EXAMPLE_REPORT.md` (expected fixture report output)
+- `docs/feature-plan-v1.md` (next feature milestones)
+
+For contributors, `docs/README.md` maps active vs archived material. Historical planning and research materials are archived at `docs/archive/2026-07-planning-history/`.
+
 ## Development
 
 ```bash
