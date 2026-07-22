@@ -14,5 +14,5 @@
     "sourceMap": false
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "data", "Planning"]
+  "exclude": ["node_modules", "dist", "data", "docs"]
 }

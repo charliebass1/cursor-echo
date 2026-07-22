@@ -4,6 +4,14 @@
 
 ---
 
+## Documentation status
+
+This PRD, `README.md`, `EXAMPLE_REPORT.md`, and `docs/feature-plan-v1.md` are the active references for extension development.
+
+Historical planning and research material is archived at `docs/archive/2026-07-planning-history/`.
+
+---
+
 ## 1. What it is
 
 **Cursor Echo** is a Cursor extension that reads your session history, spots recurring patterns in how you and the agent interact, and tells you — in plain language — what to change.
