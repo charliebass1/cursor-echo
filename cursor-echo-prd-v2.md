@@ -1,12 +1,14 @@
 # Product Requirements Document: Cursor Echo
 
-**Version:** 0.4 — transcript path and schema confirmed
+**Version:** 0.5 — implementation and product direction reconciled
 
 ---
 
 ## Documentation status
 
-This PRD, `README.md`, `EXAMPLE_REPORT.md`, and `docs/feature-plan-v1.md` are the active references for extension development.
+This PRD, `README.md`, `EXAMPLE_REPORT.md`, `docs/product-audit-2026-07.md`,
+and `docs/product-roadmap.md` are the active references for extension
+development.
 
 Historical planning and research material is archived at `docs/archive/2026-07-planning-history/`.
 
@@ -14,12 +16,16 @@ Historical planning and research material is archived at `docs/archive/2026-07-p
 
 ## 1. What it is
 
-**Cursor Echo** is a Cursor extension that reads your session history, spots recurring patterns in how you and the agent interact, and tells you — in plain language — what to change.
+**Cursor Echo** is a personalized Cursor efficiency coach. It reads your session
+history, spots recurring patterns in how you and the agent interact, and
+recommends the Cursor method most likely to improve your workflow next.
 
 **How you run it:**
 Open the Command Palette (`Cmd+Shift+P`) and type `Cursor Echo: Analyze My Sessions`.
 
-No account. No API key. No config file. No Node.js required. It installs like any other Cursor extension and finds your sessions automatically.
+The default experience needs no account, API key, config file, or Node.js
+installation. It installs like any other Cursor extension and finds sessions
+automatically. Echo Pro is an optional, bring-your-own-key path.
 
 ---
 
@@ -27,13 +33,32 @@ No account. No API key. No config file. No Node.js required. It installs like an
 
 Most Cursor users feel friction before they can name it. They re-explain things to the agent, watch it overshoot a task, or notice sessions get worse the longer they run — but they can't point to *why*, and they can't fix what they can't see.
 
-Cursor Echo makes that friction visible and tells you which Cursor feature eliminates it.
+Cursor Echo makes that friction visible, matches it to a curated workflow
+playbook, and grounds the recommendation in evidence from the user's own chats.
+Generic Skills and prompting methods are easy to find; deciding which one fits
+this user is the product's differentiator.
+
+### Product promise
+
+> Tell me the single best way to improve my Cursor workflow next, show me why it
+> applies to me, and help me adopt it safely.
+
+The target product loop is:
+
+1. Observe behavior in local session history.
+2. Match evidence to a curated playbook.
+3. Explain why the method fits and what benefit to expect.
+4. Generate or safely apply a tailored artifact.
+5. Compare future sessions to see whether the friction declined.
 
 ---
 
 ## 3. How it works (user's perspective)
 
-User opens the Command Palette, runs `Cursor Echo: Analyze My Sessions`. A progress notification appears briefly. A new editor tab opens:
+The user opens the Command Palette and runs `Cursor Echo: Analyze My Sessions`.
+A progress notification appears briefly. Echo opens a Markdown report with one
+ranked `Start here` action, evidence, an explanation, and a copy-ready artifact.
+For example:
 
 ```
 # Cursor Echo  ·  14 sessions  ·  87 turns
@@ -78,7 +103,9 @@ reusable Skills.
 *Report saved to .cursor/echo-report.md*
 ```
 
-That's the entire interaction. The report opens inline, reads in under a minute, and links directly to the relevant Cursor features.
+The report opens inline and is designed to read in under a minute. A separate
+command can apply the top Rule recommendation after handling an existing-file
+collision. See `EXAMPLE_REPORT.md` for the current fixture output.
 
 ---
 
@@ -162,9 +189,11 @@ The same content, saved to the current workspace's `.cursor/` directory alongsid
 
 ---
 
-## 7. Classifier
+## 7. Analysis modes
 
-v0.1 uses a heuristic classifier — no API key, no cost, no network requests.
+### Local mode (default)
+
+Local mode uses a heuristic classifier — no API key, cost, or network request.
 
 **How it detects patterns:**
 
@@ -175,7 +204,28 @@ v0.1 uses a heuristic classifier — no API key, no cost, no network requests.
 
 Every detected pattern quotes the specific phrase that triggered it, so users can judge for themselves whether the match is accurate.
 
-**Known limitation:** heuristics miss subtle patterns and will produce some false positives. The goal of v0.1 is to surface obvious, recurring friction — not to be exhaustive. A `cursorEcho.useAI: true` setting (v0.2, uses Anthropic API) will improve accuracy significantly.
+**Known limitation:** heuristics miss subtle patterns and can produce false
+positives. The goal of local mode is to surface obvious recurring friction, not
+to be exhaustive.
+
+### Echo Pro (optional)
+
+When `cursorEcho.aiMode` is enabled, Echo Pro can use Anthropic, OpenAI, or the
+optional Cursor SDK provider. The API key is stored in VS Code `SecretStorage`.
+Before any transcript text leaves the machine, Echo asks for one-time explicit
+consent and states whether redaction is enabled.
+
+Echo Pro:
+
+1. analyzes at most `cursorEcho.maxSessionsForAI` recent sessions;
+2. optionally redacts likely secrets;
+3. classifies each session with the configured provider;
+4. personalizes generated artifacts from the matched session evidence;
+5. adds a short coaching section to the report.
+
+If a session classification fails, that session falls back to local heuristics.
+If provider setup or the overall AI run fails, the entire run falls back to
+local heuristics and still produces a report. Fixtures never use AI.
 
 ---
 
@@ -184,20 +234,28 @@ Every detected pattern quotes the specific phrase that triggered it, so users ca
 **Commands** (registered in Command Palette):
 
 
-| Command                              | What it does                                                |
-| ------------------------------------ | ----------------------------------------------------------- |
-| `Cursor Echo: Analyze My Sessions`   | Runs analysis, opens report tab                             |
-| `Cursor Echo: Analyze with Fixtures` | Runs against bundled example data — no real sessions needed |
+| Command                                      | What it does                                                        |
+| -------------------------------------------- | ------------------------------------------------------------------- |
+| `Cursor Echo: Analyze My Sessions`           | Analyzes sessions for the open workspace and opens the report       |
+| `Cursor Echo: Analyze with Fixtures`         | Runs bundled examples locally; no real sessions are needed          |
+| `Cursor Echo: Apply Top Rule Recommendation` | Analyzes real sessions and writes the highest-ranked Rule artifact  |
+| `Cursor Echo: Set API Key (Echo Pro)`        | Stores the selected provider key in VS Code `SecretStorage`         |
+| `Cursor Echo: Clear API Key (Echo Pro)`      | Removes the stored Echo Pro key                                     |
 
 
 **Settings** (in Cursor `settings.json`):
 
 
-| Setting                      | Default | Description                                                            |
-| ---------------------------- | ------- | ---------------------------------------------------------------------- |
-| `cursorEcho.transcriptsPath` | `""`    | Custom path to `.jsonl` transcript directory. Auto-discovers if empty. |
-| `cursorEcho.minTurns`        | `3`     | Skip sessions shorter than this. Filters out one-turn experiments.     |
-| `cursorEcho.saveReport`      | `true`  | Write `.cursor/echo-report.md` after each run.                         |
+| Setting                          | Default       | Description                                                                  |
+| -------------------------------- | ------------- | ---------------------------------------------------------------------------- |
+| `cursorEcho.transcriptsPath`     | `""`          | Custom `.jsonl` directory; auto-discovers if empty                            |
+| `cursorEcho.minTurns`            | `3`           | Skips sessions shorter than this                                              |
+| `cursorEcho.saveReport`          | `true`        | Writes `.cursor/echo-report.md` after each run                                |
+| `cursorEcho.aiMode`              | `false`       | Opts in to Echo Pro AI analysis                                               |
+| `cursorEcho.aiProvider`          | `anthropic`   | Selects `anthropic`, `openai`, or `cursor`                                    |
+| `cursorEcho.aiModel`             | `""`          | Optional model override; empty uses the provider default                      |
+| `cursorEcho.maxSessionsForAI`    | `20`          | Caps recent sessions submitted to the provider                               |
+| `cursorEcho.redactBeforeSend`    | `true`        | Redacts likely keys, tokens, and email addresses before provider submission  |
 
 
 ---
@@ -211,11 +269,24 @@ cursor-echo/
     discover.ts           Auto-finds ~/.cursor/projects/ transcripts
     parse.ts              Parses Cursor JSONL transcripts
     classify.ts           Heuristic pattern detection
-    suggest.ts            Pattern → plain-language suggestion + example
-    report.ts             Builds markdown report, opens editor tab
+    suggest.ts            Pattern → recommendation and copy-ready artifact
+    report.ts             Builds Markdown report and opens its preview
+    ai/
+      config.ts           Settings, SecretStorage lookup, and consent
+      provider.ts         Provider interface and model defaults
+      providerDirect.ts   Anthropic and OpenAI HTTPS adapters
+      providerCursor.ts   Optional Cursor SDK adapter
+      classify.ts         AI classification with per-session fallback
+      enrich.ts           Context-specific artifact generation
+      insights.ts         Optional coaching section
+      redact.ts           Likely-secret redaction
   data/
     fixtures/             4 example transcripts (one per pattern + one clean)
-  package.json            Extension manifest (contributes, activationEvents, engines.vscode: "^1.85.0")
+  docs/
+    product-audit-2026-07.md
+    product-roadmap.md
+  research/               Canonical long-horizon research deliverable
+  package.json            Extension manifest and settings
   tsconfig.json
   .vscodeignore
   README.md
@@ -242,18 +313,33 @@ No terminal. No Node.js. No npm. Works the same way every other Cursor extension
 
 ---
 
-## 11. What's explicitly out of scope
+## 11. Current limitations and non-goals
 
-- **AI classification** — v0.2, opt-in via `cursorEcho.useAI: true`, uses Anthropic API
-- **Trend tracking over time** — requires more session history than most users will have at launch
-- **Webview UI or dashboard** — a markdown report tab is enough for v0.1
-- **Researcher dataset export** — out entirely; this is a user-facing tool
+Current limitations:
+
+- There are no automated regression tests or CI checks.
+- Malformed lines and sessions below `minTurns` are skipped without report
+  diagnostics.
+- Recommendation ranking uses affected-session count and a small hard-coded
+  method mapping.
+- Rule application does not show a diff preview before writing.
+- Echo does not remember adoption or compare outcomes across runs.
+- Only the first open workspace folder is used for scoping and saving.
+
+Non-goals for the current roadmap:
+
+- required accounts, hosted storage, or a mandatory backend;
+- direct ingestion or ranking of posts from X or other community feeds;
+- a mandatory webview or dashboard;
+- researcher dataset export;
+- full project management or multi-agent orchestration;
+- diagnosis of Cursor's internal Cloud Agent infrastructure.
 
 ---
 
-## 12. Done when
+## 12. Release status and next quality bar
 
-v0.1 ships when:
+The source currently implements the v0.1 experience:
 
 1. `Cursor Echo: Analyze My Sessions` auto-discovers and parses at least one real Cursor transcript without any user configuration
 2. The report tab opens in under 3 seconds for ≤20 sessions
@@ -261,4 +347,19 @@ v0.1 ships when:
 4. `Cursor Echo: Analyze with Fixtures` runs clean and produces output matching `EXAMPLE_REPORT.md`
 5. Installing from `.vsix` and running the command works on a fresh Cursor install with no additional setup
 6. A Cursor user who has never heard of this tool can understand the report without reading the README
+
+These criteria have manual evidence but are not protected by automation. Before
+expanding the recommendation library, Echo needs:
+
+1. parser, classifier, suggestion, and report regression tests;
+2. a deterministic fixture-to-report check;
+3. visible diagnostics for skipped input;
+4. a versioned curated playbook model with triggers, contraindications,
+   expected benefit, and artifact type;
+5. stable evidence-to-playbook ranking;
+6. safe previews for workspace writes;
+7. local recommendation history so improvement can be evaluated.
+
+The ordered implementation backlog and two-hour session boundaries live in
+`docs/product-roadmap.md`.
 
