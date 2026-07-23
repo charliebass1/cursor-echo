@@ -1,7 +1,9 @@
 # Cursor Echo Product Roadmap
 
-**Status:** Active  
-**Planning unit:** One bounded two-hour coding session  
+**Status:** Active
+
+**Planning unit:** One bounded two-hour coding session
+
 **Product direction:** Personalized Cursor efficiency coach
 
 ## Product outcome

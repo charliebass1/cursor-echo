@@ -1,7 +1,9 @@
 # Cursor Echo Product Audit
 
-**Audit date:** July 2026  
-**Canonical baseline:** `main` at `dda7005`  
+**Audit date:** July 2026
+
+**Canonical baseline:** `main` at `dda7005`
+
 **Product version:** `0.1.0`
 
 ## Executive summary
