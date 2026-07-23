@@ -1,6 +1,8 @@
 # Cursor Echo Feature Plan (v1)
 
-This document is the active forward-looking feature roadmap for Echo.
+**Status:** Superseded in July 2026 by `docs/product-roadmap.md`.
+
+This was the first forward-looking feature roadmap for Echo.
 
 Baseline references:
 

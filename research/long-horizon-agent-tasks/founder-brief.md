@@ -39,4 +39,6 @@ After Compile, the two cleanest **still-open and Cursor-ownable** problems are *
 3. **Supervision legibility for /multitask + Origin.** Now that fleets and auto-merge are real, test whether a per-agent ownership / blocker / next-action view reduces wrong-branch edits and cancellations in multi-agent sessions.
 4. **Context ring → adherence, not just allocation.** Extend the breakdown from "tokens per source" to "was this rule applied," to separate model-adherence limits from context-delivery bugs — the one place public data can't tell you which is which.
 
-*Backing analysis and full source audit (Outputs A–C, verification pass) live alongside this brief in `Planning/research/long-horizon-agent-tasks/`.*
+*Backing analysis and the full source audit (Outputs A–C and the verification
+pass) live alongside this brief in
+`research/long-horizon-agent-tasks/`.*

@@ -1,6 +1,11 @@
 # Cursor Echo
 
-Cursor Echo is a local Cursor extension that analyzes your recent agent chats and turns repeated friction into practical Cursor workflow fixes.
+Cursor Echo is a local Cursor extension that analyzes your recent agent chats
+and turns repeated friction into practical Cursor workflow fixes.
+
+Its direction is a personalized Cursor efficiency coach: generic Skills,
+prompting methods, and swarm advice are easy to find, but Echo uses evidence
+from your own chat history to identify which method is most relevant to you.
 
 It is built for developers who notice things like:
 
@@ -126,14 +131,17 @@ Notes:
 
 ## Project Docs
 
-For active development and product behavior, use these root docs:
+For active development and product behavior, read:
 
 - `README.md` (setup, usage, and extension commands)
-- `cursor-echo-prd-v2.md` (product requirements baseline)
+- `docs/product-audit-2026-07.md` (current product, maturity, research, and direction)
+- `cursor-echo-prd-v2.md` (implemented requirements and current limitations)
+- `docs/product-roadmap.md` (canonical roadmap of two-hour coding sessions)
 - `EXAMPLE_REPORT.md` (expected fixture report output)
-- `docs/feature-plan-v1.md` (next feature milestones)
 
-For contributors, `docs/README.md` maps active vs archived material. Historical planning and research materials are archived at `docs/archive/2026-07-planning-history/`.
+`docs/README.md` is the full documentation map. Canonical long-horizon
+research lives under `research/`; historical planning material is preserved
+under `docs/archive/2026-07-planning-history/`.
 
 ## Development
 
